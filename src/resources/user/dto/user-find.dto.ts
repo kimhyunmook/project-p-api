@@ -6,4 +6,4 @@ import { createPaginationDto } from "src/common/helpers/find-pagination.dto";
 export class UserFindUniqueDto
   extends IntersectionType(PickType(UserModel, ["id"]))
   implements IUserFindUnique {}
-export class UserFindManyDto extends createPaginationDto() implements IUserFindMany {}
+export class UserFindManyDto extends createPaginationDto([CREATED_AT]) implements IUserFindMany {}

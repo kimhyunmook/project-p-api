@@ -1,18 +1,30 @@
-import { ResponseDto } from "../dto/response.dto";
+import { MetaDto } from "../dto/list-response.dto";
 
 export class CommonSerivce {
-  constructor(private readonly name: string) {}
+  constructor(private readonly constant: Constnat) {}
 
-  protected CREATE = `${this.name}이(가) 생성되었습니다.`;
-  protected UPDATE = `${this.name}이(가) 수정되었습니다.`;
-  protected FIND_UNIQUE = `${this.name}을 상세 조회했습니다.`;
-  protected FIND_MANY = `${this.name}의 목록을 조회했습니다.`;
+  protected get Name(): string {
+    return `${this.constant.NAME}`;
+  }
 
-  protected responseData<T>(message: string, data: T): ResponseDto<T> {
+  getMetaData({ page, take, totalCount }: IMetaDataRequest): MetaDto {
+    const totalPages = Math.ceil(totalCount / take);
+
     return {
-      statusCode,
-      message,
-      data,
+      totalCount,
+      page,
+      limit: take,
+      totalPages,
     };
   }
+}
+
+interface IMetaDataRequest {
+  page: number;
+  take: number;
+  totalCount: number;
+}
+
+interface Constnat {
+  NAME: string;
 }

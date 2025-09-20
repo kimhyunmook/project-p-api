@@ -1,31 +1,31 @@
+
 model User {
-    id       BigInt     @id @default(autoincrement())
-    email    String     @unique() @db.VarChar(255)
-    password String     @db.VarChar(255)
-    name     String?    @db.VarChar(100)
-    image    String?    @db.VarChar(500)
-    role     Role       @default(USER)
-    status   UserStatus @default(ACTIVE)
+  id          Int     @id @default(autoincrement())
+  email       String     @unique @db.VarChar(255)
+  password    String     @db.VarChar(255)
+  name        String?    @db.VarChar(100)
+  image       String?    @db.VarChar(500)
+  role        Role       @default(USER)
+  status      UserStatus @default(ACTIVE)
+  lastLoginAt DateTime?  @map("last_login_at")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  deletedAt   DateTime?  @map("deleted_at")
 
-    lastLoginAt DateTime? @map("last_login_at")
-    createdAt   DateTime  @default(now()) @map("created_at")
-    updatedAt   DateTime  @updatedAt @map("updated_at")
-    deletedAt   DateTime? @map("deleted_at")
-
-    @@index([email], map: "idx_user_email") // 빠른 검색용
-    @@index([status], map: "idx_user_status") // 상태 검색용
-    @@index([deletedAt], map: "idx_user_deleted_at") // soft delete 필터링 최적화
-    @@map("user")
+  @@index([email], map: "idx_user_email")
+  @@index([status], map: "idx_user_status")
+  @@index([deletedAt], map: "idx_user_deleted_at")
+  @@map("user")
 }
 
 enum Role {
-    USER  @map("user")
-    ADMIN @map("admin")
+  USER  @map("user")
+  ADMIN @map("admin")
 }
 
 enum UserStatus {
-    ACTIVE    @map("active")
-    INACTIVE  @map("inactive")
-    SUSPENDED @map("suspended")
-    BANNED    @map("banned")
+  ACTIVE    @map("active")
+  INACTIVE  @map("inactive")
+  SUSPENDED @map("suspended")
+  BANNED    @map("banned")
 }
