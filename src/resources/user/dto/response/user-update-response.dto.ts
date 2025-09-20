@@ -1,0 +1,4 @@
+import { OmitType } from "@nestjs/swagger";
+import { NoDataResponseDto } from "@utils/.boilerplate/dto/response.dto";
+
+export class UpdateUserResponseDto extends NoDataResponseDto {}
