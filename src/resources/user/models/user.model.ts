@@ -1,13 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsOptional, IsDate, IsNumber, IsEnum } from "class-validator";
 import { Type } from "class-transformer";
-import { $Enums } from "@prisma/client";
+import { $Enums, User } from "@prisma/client";
 
-export class UserModel {
+export class UserModel implements User {
   @ApiProperty({ description: "", type: Number, nullable: false })
   @IsNumber()
   @Type(() => Number)
-  id: number;
+  id: bigint;
 
   @ApiProperty({ description: "", type: String, nullable: false })
   @IsString()
@@ -20,12 +20,12 @@ export class UserModel {
   @ApiProperty({ description: "", type: String, nullable: true })
   @IsOptional()
   @IsString()
-  name?: string;
+  name: string | null;
 
   @ApiProperty({ description: "", type: String, nullable: true })
   @IsOptional()
   @IsString()
-  image?: string;
+  image: string | null;
 
   @ApiProperty({
     description: "",
@@ -49,7 +49,7 @@ export class UserModel {
   @IsOptional()
   @IsDate()
   @Type(() => Date)
-  lastLoginAt?: Date;
+  lastLoginAt: Date | null;
 
   @ApiProperty({ description: "", type: String, nullable: false })
   @IsDate()
@@ -65,5 +65,5 @@ export class UserModel {
   @IsOptional()
   @IsDate()
   @Type(() => Date)
-  deletedAt?: Date;
+  deletedAt: Date | null;
 }

@@ -20,16 +20,20 @@ export class CommonController {
     return `${this.name}의 목록을 조회했습니다.`;
   }
 
-  protected responseData<T, M extends MetaDto | undefined = undefined>(
+  protected get DELETE(): string {
+    return `${this.name}이(가) 삭제되었습니다.`;
+  }
+
+  protected responseData<T>(
     message: string,
-    data: T,
-    meta?: M,
-  ): ResponseDto<T> & (M extends MetaDto ? { meta: M } : {}) {
+    data: T, // undefined 허용 X
+    meta?: MetaDto,
+  ): ResponseDto & { data: T } & { meta?: MetaDto } {
     return {
       statusCode: 200,
       message,
-      data,
+      data, // null 처리 제거
       ...(meta ? { meta } : {}),
-    } as any;
+    };
   }
 }

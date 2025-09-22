@@ -1,23 +1,17 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { MetaDto } from "./list-response.dto";
 
-export class ResponseDto<T = null> {
+export class ResponseDto {
   @ApiProperty({ description: "상태 코드", type: Number })
   statusCode: number;
 
   @ApiProperty({ description: "메시지", type: String })
   message: string;
-
-  @ApiProperty({ description: "데이터", nullable: true })
-  data: T;
-
-  // @ApiProperty({ description: "메타 데이터", nullable: true })
-  // meta: MetaDto | null;
 }
 
-export class IdOnlyResponseDto extends ResponseDto<DataDto> {
+export class IdOnlyResponseDto extends ResponseDto {
   @ApiProperty({ description: "데이터", nullable: false })
-  declare data: DataDto;
+  data: DataDto;
 }
 
 class DataDto {
@@ -25,4 +19,6 @@ class DataDto {
   id: bigint;
 }
 
-export class NullDataResponseDto extends ResponseDto<null> {}
+export class NullDataResponseDto extends ResponseDto {
+  data: null;
+}

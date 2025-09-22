@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { ResponseDto } from "./response.dto";
 
-export class ListResponseDto<T> extends ResponseDto<T> {
-  meta: MetaDto;
+export class ListResponseDto extends ResponseDto {
+  meta?: MetaDto;
 }
 
 export class MetaDto {
