@@ -20,5 +20,6 @@ export class IdOnlyResponseDto extends ResponseDto {
 }
 
 export class NullDataResponseDto extends ResponseDto {
-  data: null;
+  @ApiProperty({ description: "반환 데이터", example: null, nullable: true })
+  data: unknown = null;
 }

@@ -1,7 +1,7 @@
 import { Body, Post, Res } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { SigninDto, SingupDto } from "./dto/sign.dto";
-import { ApiController } from "src/common/decorators/api.decorator";
+import { ApiController } from "src/common/decorators/api-controller.decorator";
 import { ApiDocs } from "src/common/decorators/api-docs-option.decorator";
 import { Response } from "express";
 import { SignInResponseDto } from "./dto/response/sign-response.dto";

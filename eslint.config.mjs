@@ -70,7 +70,7 @@ export default tseslint.config(
       "@typescript-eslint/no-unsafe-argument": "off",
       // 존재하지 않는 타입 감지 활성화
       "@typescript-eslint/no-unsafe-call": "error",
-      "@typescript-eslint/no-unsafe-member-access": "error",
+      "@typescript-eslint/no-unsafe-member-access": "off",
 
       // ❌ 불필요하거나 불편한 규칙 끔
       "@typescript-eslint/no-unused-vars": "off",

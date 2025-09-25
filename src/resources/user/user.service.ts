@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { IUserCreate, IUserFindUnique, IUserFindMany, IUserUpdate } from "./user.type";
+import { IUserFindUnique, IUserFindMany, IUserUpdate } from "./user.type";
 import { PrismaService } from "src/core/prisma/prisma.service";
 import { Prisma } from "@prisma/client";
 import { CommonSerivce } from "src/common/utils/common.service";
@@ -9,10 +9,6 @@ import { Constant } from "./user.constant";
 export class UserService extends CommonSerivce {
   constructor(private readonly repository: PrismaService) {
     super(Constant);
-  }
-
-  async create(data: IUserCreate) {
-    return this.repository.user.create({ data });
   }
 
   async findUniqueAndThrow({ id, ...rest }: IUserFindUnique) {

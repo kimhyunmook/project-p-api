@@ -24,30 +24,27 @@ export class CommonController {
     return `${this.name}이(가) 삭제되었습니다.`;
   }
 
-  //  오버로딩 선언부
-  protected responseData<T>(
-    message: string,
-    data: T,
-    meta?: MetaDto,
-  ): ResponseDto & { data: T; meta?: MetaDto };
-  protected responseData(
-    message: string,
-    data?: null,
-    meta?: MetaDto,
-  ): ResponseDto & { data: null; meta?: MetaDto };
-  protected responseData<T>(message: string, data: T): ResponseDto & { data: T };
-  protected responseData(message: string, data: null): ResponseDto & { data: null };
+  protected responseData(message: string): { statusCode: number; message: string; data: null };
 
   protected responseData<T>(
     message: string,
-    data: T, // undefined 허용 X
-    meta?: MetaDto,
-  ): ResponseDto & { data: T } & { meta?: MetaDto } {
-    return {
-      statusCode: 200,
-      message,
-      data, // null 처리 제거
-      ...(meta ? { meta } : {}),
-    };
+    data: T | null,
+  ): { statusCode: number; message: string; data: T };
+
+  protected responseData<T>(
+    message: string,
+    data: T | null,
+    meta: MetaDto,
+  ): { statusCode: number; message: string; data: T; meta: MetaDto };
+
+  protected responseData<T>(message: string, data?: T | null, meta?: MetaDto) {
+    // 데이터 값이 없을 경우 null
+    if (data === undefined) data = null;
+
+    // 메타 데이터가 없을 경우 반환 케이스
+    if (!meta) return { statusCode: 200000, message, data };
+
+    // 전체 반환 케이스
+    return { statusCode: 200, message, data, meta };
   }
 }

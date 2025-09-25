@@ -1,27 +1,49 @@
-import { HttpCode, applyDecorators } from "@nestjs/common";
-import { ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
+import { Delete, Get, Patch, Post, Put, applyDecorators, Type } from "@nestjs/common";
+import { ApiOperation, ApiBearerAuth } from "@nestjs/swagger";
+import { UseRoleGuard } from "./role-guard.decorator";
+import { Role } from "@prisma/client";
 
-export function ApiDocs(
-  { summary, status = 200, description, type }: ApiDocsOptions,
-  bearerAuth: boolean = false,
-) {
+const methodMap = {
+  GET: Get,
+  POST: Post,
+  PUT: Put,
+  PATCH: Patch,
+  DELETE: Delete,
+};
+
+function getHttpMethodDecorator(method: string, endpoint: string) {
+  const HttpMethod = methodMap[method.toUpperCase() as keyof typeof methodMap] || Get;
+  return HttpMethod(endpoint);
+}
+
+function getDescription(summaryDesc: string | undefined, role?: Role) {
+  if (summaryDesc) return summaryDesc;
+  return `API 설명\n${role ? "인증이 필요한 API입니다." : ""}`;
+}
+
+export function ApiDocs({
+  summary,
+  description,
+  method = "GET",
+  endpoint = "",
+  role,
+}: ApiDocsOptions) {
   const decorators = [
-    ApiOperation({ summary }),
-    ApiResponse({
-      status,
-      description: description || summary + " api",
-      type: type || undefined,
-    }),
-    HttpCode(status), // 실제 HTTP 상태 코드 설정
+    getHttpMethodDecorator(method, endpoint),
+    ApiOperation({ summary, description: getDescription(description, role) }),
   ];
 
-  if (bearerAuth) decorators.push(ApiBearerAuth());
+  if (role) {
+    decorators.push(ApiBearerAuth(), UseRoleGuard(role));
+  }
+
   return applyDecorators(...decorators);
 }
 
 interface ApiDocsOptions {
+  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  endpoint?: string;
   summary: string;
-  status?: number;
   description?: string;
-  type?: any;
+  role?: Role;
 }

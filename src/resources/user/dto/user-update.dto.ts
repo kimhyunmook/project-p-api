@@ -1,7 +1,14 @@
 import { OmitType, PartialType } from "@nestjs/swagger";
-import { UserCreateDto } from "./user-create.dto";
 import { IUserUpdate } from "../user.type";
+import { UserModel } from "../models/user.model";
 
 export class UserUpdateDto
-  extends OmitType(PartialType(UserCreateDto), [])
+  extends OmitType(PartialType(UserModel), [
+    "createdAt",
+    "deletedAt",
+    "lastLoginAt",
+    "role",
+    "updatedAt",
+    "email",
+  ])
   implements IUserUpdate {}
