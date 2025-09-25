@@ -9,14 +9,14 @@ export class ResponseDto {
   message: string;
 }
 
+class DataDto {
+  @ApiProperty({ description: "아이디", type: Number })
+  id: number;
+}
+
 export class IdOnlyResponseDto extends ResponseDto {
   @ApiProperty({ description: "데이터", nullable: false })
   data: DataDto;
-}
-
-class DataDto {
-  @ApiProperty({ description: "아이디", type: Number })
-  id: bigint;
 }
 
 export class NullDataResponseDto extends ResponseDto {

@@ -24,6 +24,20 @@ export class CommonController {
     return `${this.name}이(가) 삭제되었습니다.`;
   }
 
+  //  오버로딩 선언부
+  protected responseData<T>(
+    message: string,
+    data: T,
+    meta?: MetaDto,
+  ): ResponseDto & { data: T; meta?: MetaDto };
+  protected responseData(
+    message: string,
+    data?: null,
+    meta?: MetaDto,
+  ): ResponseDto & { data: null; meta?: MetaDto };
+  protected responseData<T>(message: string, data: T): ResponseDto & { data: T };
+  protected responseData(message: string, data: null): ResponseDto & { data: null };
+
   protected responseData<T>(
     message: string,
     data: T, // undefined 허용 X

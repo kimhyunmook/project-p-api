@@ -1,28 +1,34 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsOptional, IsDate, IsNumber, IsEnum } from "class-validator";
+import { ApiProperty, IntersectionType, OmitType } from "@nestjs/swagger";
+import { IsString, IsOptional, IsDate, IsNumber, IsEnum, IsEmail } from "class-validator";
 import { Type } from "class-transformer";
 import { $Enums, User } from "@prisma/client";
+import { DateAtDto } from "src/common/dto/date-at.dto";
 
-export class UserModel implements User {
-  @ApiProperty({ description: "", type: Number, nullable: false })
+export class UserModel extends IntersectionType(OmitType(DateAtDto, [])) implements User {
+  @ApiProperty({ description: "id", type: Number, nullable: false })
   @IsNumber()
   @Type(() => Number)
-  id: bigint;
+  id: number;
 
-  @ApiProperty({ description: "", type: String, nullable: false })
-  @IsString()
+  @ApiProperty({
+    description: "email",
+    type: String,
+    nullable: false,
+    example: "example@example.com",
+  })
+  @IsEmail()
   email: string;
 
-  @ApiProperty({ description: "", type: String, nullable: false })
+  @ApiProperty({ description: "password", type: String, nullable: false })
   @IsString()
   password: string;
 
-  @ApiProperty({ description: "", type: String, nullable: true })
+  @ApiProperty({ description: "name", type: String, nullable: true })
   @IsOptional()
   @IsString()
   name: string | null;
 
-  @ApiProperty({ description: "", type: String, nullable: true })
+  @ApiProperty({ description: "image url", type: String, nullable: true })
   @IsOptional()
   @IsString()
   image: string | null;
@@ -32,38 +38,24 @@ export class UserModel implements User {
     type: String,
     nullable: false,
     enum: $Enums.Role,
+    default: $Enums.Role.USER,
   })
   @IsEnum($Enums.Role)
   role: $Enums.Role;
 
   @ApiProperty({
-    description: "",
+    description: "상태",
     type: String,
     nullable: false,
     enum: $Enums.UserStatus,
+    default: $Enums.UserStatus.ACTIVE,
   })
   @IsEnum($Enums.UserStatus)
   status: $Enums.UserStatus;
 
-  @ApiProperty({ description: "", type: String, nullable: true })
+  @ApiProperty({ description: "최근 로그인 시간", type: Date, nullable: true })
   @IsOptional()
   @IsDate()
   @Type(() => Date)
   lastLoginAt: Date | null;
-
-  @ApiProperty({ description: "", type: String, nullable: false })
-  @IsDate()
-  @Type(() => Date)
-  createdAt: Date;
-
-  @ApiProperty({ description: "", type: String, nullable: false })
-  @IsDate()
-  @Type(() => Date)
-  updatedAt: Date;
-
-  @ApiProperty({ description: "", type: String, nullable: true })
-  @IsOptional()
-  @IsDate()
-  @Type(() => Date)
-  deletedAt: Date | null;
 }

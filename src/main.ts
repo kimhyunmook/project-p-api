@@ -10,9 +10,14 @@ async function bootstrap() {
     .setTitle("Project P API")
     .setDescription("The Project P API description")
     .setVersion("1.0")
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup("api/swagger", app, document);
+  SwaggerModule.setup("api-docs", app, document, {
+    swaggerOptions: {
+      defaultModelsExpandDepth: -1,
+    },
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
