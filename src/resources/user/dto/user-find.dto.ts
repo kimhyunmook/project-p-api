@@ -7,4 +7,5 @@ import { CREATED_AT } from "src/common/enums/created-at.enum";
 export class UserFindUniqueDto
   extends IntersectionType(PickType(UserModel, ["id"]))
   implements IUserFindUnique {}
+
 export class UserFindManyDto extends createPaginationDto([CREATED_AT]) implements IUserFindMany {}

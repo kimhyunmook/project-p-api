@@ -31,7 +31,7 @@ export class UserController extends CommonController {
     return this.responseData(this.UPDATE);
   }
 
-  @ApiDocs({ method: "DELETE", endpoint: ":id", summary: `${CONSTANT.NAME} 삭제`, role: "USER" })
+  @ApiDocs({ method: "DELETE", endpoint: ":id", summary: `${CONSTANT.NAME} 탈퇴`, role: "USER" })
   async softDelete(@Param("id") id: number): Promise<NullDataResponseDto> {
     await this.service.softDelete(id);
     return this.responseData(this.DELETE);

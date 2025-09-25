@@ -11,7 +11,7 @@ export class UserModel extends IntersectionType(OmitType(DateAtDto, [])) impleme
   id: number;
 
   @ApiProperty({
-    description: "email",
+    description: "이메일",
     type: String,
     nullable: false,
     example: "example@example.com",
@@ -19,22 +19,22 @@ export class UserModel extends IntersectionType(OmitType(DateAtDto, [])) impleme
   @IsEmail()
   email: string;
 
-  @ApiProperty({ description: "password", type: String, nullable: false })
+  @ApiProperty({ description: "비밀번호", type: String, nullable: false })
   @IsString()
   password: string;
 
-  @ApiProperty({ description: "name", type: String, nullable: true })
+  @ApiProperty({ description: "이름", type: String, nullable: true })
   @IsOptional()
   @IsString()
   name: string | null;
 
-  @ApiProperty({ description: "image url", type: String, nullable: true })
+  @ApiProperty({ description: "유저 이미지", type: String, nullable: true })
   @IsOptional()
   @IsString()
   image: string | null;
 
   @ApiProperty({
-    description: "",
+    description: "권한",
     type: String,
     nullable: false,
     enum: $Enums.Role,

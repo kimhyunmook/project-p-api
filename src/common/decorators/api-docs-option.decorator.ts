@@ -17,8 +17,10 @@ function getHttpMethodDecorator(method: string, endpoint: string) {
 }
 
 function getDescription(summaryDesc: string | undefined, role?: Role) {
-  if (summaryDesc) return summaryDesc;
-  return `API 설명\n${role ? "인증이 필요한 API입니다." : ""}`;
+  return `
+  - API 설명 ${summaryDesc ? summaryDesc : ""}
+  ${role ? "- Auth 인증이 필요한 API입니다." : ""}
+  `;
 }
 
 export function ApiDocs({
