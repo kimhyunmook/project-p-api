@@ -1,4 +1,4 @@
-import { Body, Post, Res } from "@nestjs/common";
+import { Body, Res } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { SigninDto, SingupDto } from "./dto/sign.dto";
 import { ApiController } from "src/common/decorators/api-controller.decorator";
@@ -18,15 +18,13 @@ export class AuthController extends CommonController {
     super("Auth");
   }
 
-  @Post("signup")
-  @ApiDocs({ summary: "회원가입" })
+  @ApiDocs({ method: "POST", endpoint: "signup", summary: "회원가입" })
   async signup(@Body() body: SingupDto): Promise<IdOnlyResponseDto> {
     const { id } = await this.authService.signUp(body);
     return this.responseData("회원가입", { id });
   }
 
-  @Post("signin")
-  @ApiDocs({ summary: "로그인" })
+  @ApiDocs({ method: "POST", endpoint: "signin", summary: "로그인" })
   async signin(@Body() body: SigninDto, @Res() res: Response): Promise<SignInResponseDto> {
     const { accessToken } = await this.authService.signIn(body.email, body.password);
 

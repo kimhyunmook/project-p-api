@@ -1,12 +1,16 @@
 import { PrismaClient } from "@prisma/client";
+import * as bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
 async function seeding(): Promise<void> {
+  const salt = process.env.SALT_ROUNDS!;
+  const initPassword = process.env.INIT_ADMIN_PASSWORD!;
+  const pw = await bcrypt.hash(initPassword, Number(salt));
   await prisma.user.create({
     data: {
       email: process.env.INIT_ADMIN!,
-      password: process.env.INIT_ADMIN_PASSWORD!,
+      password: pw,
     },
   });
   await prisma.category.createMany({

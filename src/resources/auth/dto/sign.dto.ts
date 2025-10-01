@@ -1,5 +1,4 @@
-import { ApiProperty, PickType } from "@nestjs/swagger";
-import { IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { PickType } from "@nestjs/swagger";
 import { CreateDtoFromModel } from "src/common/helpers/create-from-model.dto";
 import { UserModel } from "src/resources/user/models/user.model";
 
