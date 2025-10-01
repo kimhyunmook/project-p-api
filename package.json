@@ -18,8 +18,7 @@
     "seed": "prisma migrate reset && ts-node ./prisma/seed.ts"
   },
   "prisma": {
-    "schema": "./prisma",
-    "seed": "ts-node prisma/seed.ts"
+    "schema": "./prisma"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.896.0",

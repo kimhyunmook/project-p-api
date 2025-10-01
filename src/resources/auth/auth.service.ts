@@ -1,17 +1,44 @@
-import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+  ConflictException,
+  Injectable,
+  Logger,
+  // Logger,
+  NotFoundException,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from "src/core/prisma/prisma.service";
 import * as bcrypt from "bcrypt";
 import { ISignUp } from "./types/signup.type";
 import { ConfigService } from "@nestjs/config";
+import { $Enums } from "@prisma/client";
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
   constructor(
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
   ) {}
+
+  async onModuleInit() {
+    const initAdmin = this.configService.get<string>("INIT_ADMIN", { infer: true });
+    const initAdminPassword = this.configService.get<string>("INIT_ADMIN_PASSWORD", {
+      infer: true,
+    });
+    if (!initAdmin || !initAdminPassword)
+      throw new NotFoundException("initAdmin or initAdminPassword 찾을 수 없음");
+    if (await this.prisma.user.findUnique({ where: { email: initAdmin } }))
+      return this.logger.log("✅ Init Admin 존재");
+
+    await this.signUp({
+      email: initAdmin,
+      password: initAdminPassword,
+      name: "최고 관리자",
+      role: $Enums.Role.ADMIN,
+    });
+  }
 
   async signUp({ email, password, ...rest }: ISignUp) {
     const saltRounds = Number(this.configService.get<string>("SALT_ROUNDS", { infer: true }));

@@ -7,10 +7,12 @@ model User {
   role        Role       @default(USER)
   status      UserStatus @default(ACTIVE)
   lastLoginAt DateTime?  @map("last_login_at")
-  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt   DateTime   @updatedAt @map("updated_at") @db.Timestamptz(3)
-  deletedAt   DateTime?  @map("deleted_at") @db.Timestamptz(3)
-  post        Post[]
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(3)
+  post      Post[]
+  pet       Pet[]
 
   @@index([email], map: "idx_user_email")
   @@index([status], map: "idx_user_status")
@@ -19,13 +21,13 @@ model User {
 }
 
 enum Role {
-  USER  @map("user")
-  ADMIN @map("admin")
+  USER  @map("유저")
+  ADMIN @map("관리자")
 }
 
 enum UserStatus {
-  ACTIVE    @map("active")
-  INACTIVE  @map("inactive")
-  SUSPENDED @map("suspended")
-  BANNED    @map("banned")
+  ACTIVE    @map("활성")
+  INACTIVE  @map("비활성")
+  SUSPENDED @map("정지")
+  BANNED    @map("차단")
 }

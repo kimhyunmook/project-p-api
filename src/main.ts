@@ -7,7 +7,9 @@ import { NestExpressApplication } from "@nestjs/platform-express";
 import helmet from "helmet";
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    logger: ["verbose"],
+  });
   const configService = app.get(ConfigService);
 
   app.enableCors({

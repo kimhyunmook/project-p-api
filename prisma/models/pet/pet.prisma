@@ -1,0 +1,27 @@
+model Pet {
+    id   Int     @id @default(autoincrement())
+    type PetType
+    name String  @db.VarChar(100) /// 애완동물 이름
+    age  Int     @default(0) /// 애완동물 나이
+
+    owner    User      @relation(fields: [ownerId], references: [id])
+    category Category? @relation(fields: [categoryId], references: [id])
+    tag      Tag?      @relation(fields: [tagId], references: [id])
+
+    ownerId    Int  @map("owner_id") /// 주인 아이디
+    categoryId Int? @map("category_id")
+    tagId      Int? @map("tag_id")
+
+    createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+    updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+    deletedAt DateTime? @map("deleted_at") @db.Timestamptz(3)
+
+    @@map("pet")
+}
+
+enum PetType {
+    DOG  @map("강아지")
+    CAT  @map("고양이")
+    BRID @map("새")
+    FISH @map("물고기")
+}

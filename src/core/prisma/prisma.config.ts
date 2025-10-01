@@ -34,7 +34,7 @@ export const createErrorMappingExtension = (logger: Logger) =>
                 case "P2006":
                   throw new BadRequestException("유효성 검사 오류");
                 case "P2014":
-                  throw new InternalServerErrorException("트랜잭션이 실패");
+                  throw new InternalServerErrorException("트랜잭션 실패");
                 default:
                   throw new BadRequestException(e.message || "잘못된 요청");
               }

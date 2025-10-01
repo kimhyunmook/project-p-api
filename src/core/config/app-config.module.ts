@@ -13,6 +13,8 @@ import * as Joi from "joi";
         PORT: Joi.number().default(80),
         SALT_ROUNDS: Joi.number().required(),
         ACCESS_TOKEN_EXPIRE: Joi.number().required(),
+        INIT_ADMIN: Joi.string().required(),
+        INIT_ADMIN_PASSWORD: Joi.string().required(),
       }),
       validationOptions: {
         abortEarly: true, // 첫 번째 오류 발생 시 멈춤
