@@ -25,7 +25,10 @@ export class AuthController extends CommonController {
   }
 
   @ApiDocs({ method: "POST", endpoint: "signin", summary: "로그인" })
-  async signin(@Body() body: SigninDto, @Res() res: Response): Promise<SignInResponseDto> {
+  async signin(
+    @Body() body: SigninDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<SignInResponseDto> {
     const { accessToken } = await this.authService.signIn(body.email, body.password);
 
     res.cookie("access_token", accessToken, {

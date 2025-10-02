@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { PrismaService } from "src/core/prisma/prisma.service";
-import { JwtPayload } from "../interface/jwt.interface";
+import { AccountPayload } from "../interface/jwt.interface";
 import { Request } from "express";
 import { Reflector } from "@nestjs/core";
 import { ROLE_KEY } from "./auth.guard";
@@ -52,8 +52,8 @@ export class JwtAuthGuard implements CanActivate {
 
     try {
       // JWT 토큰 검증
-      const payload = await this.jwtService.verifyAsync<JwtPayload>(token, {
-        secret: this.configService.get<string>("JWT_SECRET"),
+      const payload = await this.jwtService.verifyAsync<AccountPayload>(token, {
+        secret: this.configService.get<string>("ACCESS_JWT_SECRET"),
       });
 
       // DB에서 사용자 정보 조회
@@ -102,6 +102,7 @@ export class JwtAuthGuard implements CanActivate {
       if (error instanceof UnauthorizedException) {
         throw error;
       }
+      console.log(error);
       throw new UnauthorizedException("유효하지 않은 토큰입니다.");
     }
   }

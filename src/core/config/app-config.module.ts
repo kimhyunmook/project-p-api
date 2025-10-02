@@ -8,7 +8,7 @@ import * as Joi from "joi";
       isGlobal: true,
       envFilePath: ".env",
       validationSchema: Joi.object({
-        JWT_SECRET: Joi.string().required(),
+        ACCESS_JWT_SECRET: Joi.string().required(),
         DATABASE_URL: Joi.string().required(),
         PORT: Joi.number().default(80),
         SALT_ROUNDS: Joi.number().required(),

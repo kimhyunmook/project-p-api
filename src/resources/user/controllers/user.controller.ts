@@ -7,8 +7,8 @@ import { ApiController } from "src/common/decorators/api-controller.decorator";
 import { NullDataResponseDto } from "src/common/dto/response.dto";
 import { CommonController } from "src/common/utils/common.controller";
 import { ApiDocs } from "src/common/decorators/api-docs-option.decorator";
-import { User } from "src/common/decorators/user.decorator";
-import { JwtPayload } from "src/common/interface/jwt.interface";
+import { Account } from "src/common/decorators/user.decorator";
+import { AccountPayload } from "src/common/interface/jwt.interface";
 
 @ApiController("user")
 export class UserController extends CommonController {
@@ -17,8 +17,8 @@ export class UserController extends CommonController {
   }
 
   @ApiDocs({ endpoint: "own", summary: "내 정보 조회", role: "user" })
-  async findUnique(@User() user: JwtPayload): Promise<UserFindUniqueResponseDto> {
-    const resource = await this.service.findUniqueAndThrow({ id: user.sub });
+  async findUnique(@Account() account: AccountPayload): Promise<UserFindUniqueResponseDto> {
+    const resource = await this.service.findUniqueAndThrow({ id: account.sub });
     return this.responseData(this.FIND_UNIQUE, resource);
   }
 
@@ -32,8 +32,8 @@ export class UserController extends CommonController {
   }
 
   @ApiDocs({ method: "DELETE", endpoint: ":id", summary: `${CONSTANT.NAME} 탈퇴`, role: "user" })
-  async softDelete(@Param("id") id: number): Promise<NullDataResponseDto> {
-    await this.service.softDelete(id);
+  async softDelete(@Account() account: AccountPayload): Promise<NullDataResponseDto> {
+    await this.service.softDelete(account.sub);
     return this.responseData(this.DELETE);
   }
 }

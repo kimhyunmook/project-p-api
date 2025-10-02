@@ -23,12 +23,15 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>("JWT_SECRET"),
-        signOptions: {
-          expiresIn: configService.get<string>("ACCESS_TOKEN_EXPIRE"),
-        },
-      }),
+      useFactory: (configService: ConfigService) => {
+        const expireSeconds = configService.get<number>("ACCESS_TOKEN_EXPIRE");
+        return {
+          secret: configService.get<string>("ACCESS_JWT_SECRET"),
+          signOptions: {
+            expiresIn: `${expireSeconds}s`, // 초 단위 문자열로 변환 (3600 -> "3600s")
+          },
+        };
+      },
       global: true,
     }),
   ],

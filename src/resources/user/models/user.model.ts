@@ -1,8 +1,9 @@
 import { ApiProperty, IntersectionType, OmitType } from "@nestjs/swagger";
-import { IsString, IsOptional, IsDate, IsNumber, IsEnum, IsEmail } from "class-validator";
+import { IsString, IsOptional, IsDate, IsNumber, IsEnum } from "class-validator";
 import { Type } from "class-transformer";
 import { $Enums, User } from "@prisma/client";
 import { DateAtDto } from "src/common/dto/date-at.dto";
+import { IsEmailOrUsername } from "src/common/validators/is-email-or-username.validator";
 
 export class UserModel extends IntersectionType(OmitType(DateAtDto, [])) implements User {
   @ApiProperty({ description: "id", type: Number, nullable: false })
@@ -11,12 +12,12 @@ export class UserModel extends IntersectionType(OmitType(DateAtDto, [])) impleme
   id: number;
 
   @ApiProperty({
-    description: "이메일",
+    description: "이메일 또는 사용자명 (admin 허용)",
     type: String,
     nullable: false,
     example: "example@example.com",
   })
-  @IsEmail()
+  @IsEmailOrUsername(["admin"])
   email: string;
 
   @ApiProperty({ description: "비밀번호", type: String, nullable: false })

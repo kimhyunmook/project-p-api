@@ -11,10 +11,10 @@ export class PostService extends CommonService implements OnModuleInit {
   private readonly logger = new Logger(PostService.name);
 
   // 필수 카테고리 목록
-  private readonly REQUIRED_CATEGORIES = [
-    { name: "공지사항", type: $Enums.InfoType.POST },
-    { name: "자유게시판", type: $Enums.InfoType.POST },
-    { name: "질문답변", type: $Enums.InfoType.POST },
+  private readonly REQUIRED_CATEGORIES: { name: string; type?: $Enums.InfoType }[] = [
+    { name: "공지사항" },
+    { name: "자유게시판" },
+    { name: "질문답변" },
   ];
 
   constructor(private readonly prisma: PrismaService) {
@@ -35,7 +35,7 @@ export class PostService extends CommonService implements OnModuleInit {
         const exists = await this.prisma.category.findFirst({
           where: {
             name: category.name,
-            type: category.type,
+            type: category.type ? category.type : $Enums.InfoType.POST,
           },
         });
 
@@ -44,9 +44,7 @@ export class PostService extends CommonService implements OnModuleInit {
             data: category,
           });
           this.logger.log(`✅ 카테고리 생성: ${category.name}`);
-        } else {
-          this.logger.log(`✅ 카테고리 존재: ${category.name}`);
-        }
+        } else this.logger.log(`✅ 카테고리 존재: ${category.name}`);
       }
       this.logger.log("✅ 게시판 카테고리 초기화 완료");
     } catch (error) {
@@ -54,6 +52,7 @@ export class PostService extends CommonService implements OnModuleInit {
     }
   }
 
+  /** Prisma Logic */
   async create(data: IPostCreate) {
     return this.prisma.post.create({ data });
   }

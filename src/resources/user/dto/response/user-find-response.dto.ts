@@ -12,4 +12,4 @@ export class UserFindUniqueResponseDto extends ResponseDto {
   data: UserFindUniqueData;
 }
 
-class UserFindUniqueData extends OmitType(UserModel, []) {}
+class UserFindUniqueData extends OmitType(UserModel, ["password", "deletedAt"]) {}

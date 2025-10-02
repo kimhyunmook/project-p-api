@@ -42,7 +42,7 @@ export class CommonController {
     if (data === undefined) data = null;
 
     // 메타 데이터가 없을 경우 반환 케이스
-    if (!meta) return { statusCode: 200000, message, data };
+    if (!meta) return { statusCode: 200, message, data };
 
     // 전체 반환 케이스
     return { statusCode: 200, message, data, meta };

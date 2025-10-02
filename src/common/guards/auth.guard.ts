@@ -10,6 +10,7 @@ export const ROLE_KEY = "role";
  * - JwtAuthGuard 이후에 실행되어야 함
  * - request.user에 사용자 정보가 이미 주입되어 있어야 함
  * - 특정 role만 접근 가능하도록 제한
+ * - admin은 모든 권한에 접근 가능 (상위 권한)
  */
 @Injectable()
 export class RoleGuard implements CanActivate {
@@ -32,7 +33,12 @@ export class RoleGuard implements CanActivate {
       throw new ForbiddenException("인증이 필요합니다.");
     }
 
-    // role 확인
+    // admin은 모든 권한에 접근 가능
+    if (user.role === "admin") {
+      return true;
+    }
+
+    // 일반 사용자는 요구되는 role과 일치해야 함
     if (user.role !== requiredRole.toLowerCase()) {
       throw new ForbiddenException(`접근 권한이 없습니다. ${requiredRole} 권한이 필요합니다.`);
     }

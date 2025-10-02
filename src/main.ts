@@ -34,6 +34,7 @@ async function bootstrap() {
   SwaggerModule.setup("api-docs", app, document, {
     swaggerOptions: {
       defaultModelsExpandDepth: -1,
+      persistAuthorization: true, // 새로고침 시 인증 정보 유지
     },
   });
 
