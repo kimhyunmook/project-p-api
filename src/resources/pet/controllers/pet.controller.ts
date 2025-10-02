@@ -30,7 +30,7 @@ export class PetController extends CommonController {
     return this.responseData(this.FIND_MANY, resources, meta);
   }
 
-  @ApiDocs({ method: "POST", summary: `${PetService.MODULE_NAME} 생성` })
+  @ApiDocs({ method: "POST", summary: `${PetService.MODULE_NAME} 등록` })
   async create(@Body() body: PetCreateDto): Promise<IdOnlyResponseDto> {
     const { id } = await this.service.create(body);
     return this.responseData(this.CREATE, { id });
@@ -39,7 +39,7 @@ export class PetController extends CommonController {
   @ApiDocs({
     method: "PATCH",
     endpoint: ":id",
-    summary: `${PetService.MODULE_NAME} 수정`,
+    summary: `${PetService.MODULE_NAME} 정보 수정`,
   })
   async update(
     @Param("id", ParseIntPipe) id: number,
@@ -52,7 +52,7 @@ export class PetController extends CommonController {
   @ApiDocs({
     method: "DELETE",
     endpoint: ":id",
-    summary: `${PetService.MODULE_NAME} 삭제`,
+    summary: `${PetService.MODULE_NAME} 등록 해제`,
   })
   async softDelete(@Param("id") id: number): Promise<NullDataResponseDto> {
     await this.service.softDelete(id);

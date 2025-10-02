@@ -3,14 +3,14 @@ import { PostModel } from "../../models/post.model";
 import { ResponseDto } from "src/common/dto/response.dto";
 import { ListResponseDto } from "src/common/dto/list-response.dto";
 
+class PostResponseData extends OmitType(PostModel, []) {}
+
 /** Unique */
 export class PostFindUniqueResponseDto extends ResponseDto {
-    data: PostFindUniqueData;
+  data: PostResponseData;
 }
-class PostFindUniqueData extends OmitType(PostModel, []) {}
 
 /** List */
 export class PostFindManyResponseDto extends ListResponseDto {
-    data: PostFindManyData[];
+  data: PostResponseData[];
 }
-class PostFindManyData extends OmitType(PostModel, []) {}

@@ -5,10 +5,11 @@ import { ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import helmet from "helmet";
+import { CustomLoggerService } from "./core/logger/custom-logger.service";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: ["verbose"],
+    logger: new CustomLoggerService(),
   });
   const configService = app.get(ConfigService);
 

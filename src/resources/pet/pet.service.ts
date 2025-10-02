@@ -7,7 +7,7 @@ import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class PetService extends CommonService {
-  public static readonly MODULE_NAME = "Pet";
+  public static readonly MODULE_NAME = "애완동물";
 
   constructor(private readonly prisma: PrismaService) {
     super({ NAME: PetService.MODULE_NAME });

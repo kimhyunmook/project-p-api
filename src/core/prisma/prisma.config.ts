@@ -14,7 +14,7 @@ export const createErrorMappingExtension = (logger: Logger) =>
       $allModels: {
         $allOperations: async ({ model, operation, args, query }) => {
           try {
-            logger.log(`${model}.${operation}`);
+            // logger.log(`${model}.${operation}`);
             const result = await query(args);
             return result;
           } catch (e: unknown) {

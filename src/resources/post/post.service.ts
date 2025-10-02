@@ -1,14 +1,57 @@
-import { Injectable } from "@nestjs/common";
-import { IPostCreate, IPostFindUnique, IPostFindMany, IPostUpdate } from "./post.type";
+import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
+import { IPostCreate, IPostFindUnique, IPostFindMany, IPostUpdate } from "./post.interface";
 import { PrismaService } from "src/core/prisma/prisma.service";
-import { Prisma } from "@prisma/client";
 import { CommonService } from "src/common/utils/common.service";
-import { Constant } from "./post.constant";
+import { Prisma, $Enums } from "@prisma/client";
+import { createPaginationOptions } from "src/common/helpers/pagination.helper";
 
 @Injectable()
-export class PostService extends CommonService {
+export class PostService extends CommonService implements OnModuleInit {
+  public static readonly MODULE_NAME = "게시판";
+  private readonly logger = new Logger(PostService.name);
+
+  // 필수 카테고리 목록
+  private readonly REQUIRED_CATEGORIES = [
+    { name: "공지사항", type: $Enums.InfoType.POST },
+    { name: "자유게시판", type: $Enums.InfoType.POST },
+    { name: "질문답변", type: $Enums.InfoType.POST },
+  ];
+
   constructor(private readonly prisma: PrismaService) {
-    super(Constant);
+    super({ NAME: PostService.MODULE_NAME });
+  }
+
+  async onModuleInit() {
+    await this.initializeCategories();
+  }
+
+  /**
+   * 필수 카테고리 초기화
+   * - 존재하지 않는 카테고리만 생성
+   */
+  private async initializeCategories() {
+    try {
+      for (const category of this.REQUIRED_CATEGORIES) {
+        const exists = await this.prisma.category.findFirst({
+          where: {
+            name: category.name,
+            type: category.type,
+          },
+        });
+
+        if (!exists) {
+          await this.prisma.category.create({
+            data: category,
+          });
+          this.logger.log(`✅ 카테고리 생성: ${category.name}`);
+        } else {
+          this.logger.log(`✅ 카테고리 존재: ${category.name}`);
+        }
+      }
+      this.logger.log("✅ 게시판 카테고리 초기화 완료");
+    } catch (error) {
+      this.logger.error("❌ 카테고리 초기화 실패", error);
+    }
   }
 
   async create(data: IPostCreate) {
@@ -26,14 +69,7 @@ export class PostService extends CommonService {
   async fidnMany({ page, take, sort, ...rest }: IPostFindMany) {
     const option: Prisma.PostFindManyArgs = {
       where: { ...rest },
-      take,
-      skip: (page - 1) * take,
-      orderBy: (() => {
-        switch (sort) {
-          default:
-            return { createdAt: "desc" };
-        }
-      })(),
+      ...createPaginationOptions({ page, take, sort }),
     };
 
     const [resources, totalCount] = await this.prisma.$transaction([
@@ -53,7 +89,9 @@ export class PostService extends CommonService {
   async update(data: IPostUpdate) {
     const { id, ...rest } = data;
     return this.prisma.post.update({
-      where: { id },
+      where: {
+        id,
+      },
       data: {
         ...rest,
       },
