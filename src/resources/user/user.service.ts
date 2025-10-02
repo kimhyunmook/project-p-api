@@ -2,11 +2,11 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { IUserFindUnique, IUserFindMany, IUserUpdate } from "./user.type";
 import { PrismaService } from "src/core/prisma/prisma.service";
 import { Prisma } from "@prisma/client";
-import { CommonSerivce } from "src/common/utils/common.service";
+import { CommonService } from "src/common/utils/common.service";
 import { Constant } from "./user.constant";
 
 @Injectable()
-export class UserService extends CommonSerivce {
+export class UserService extends CommonService {
   constructor(private readonly repository: PrismaService) {
     super(Constant);
   }

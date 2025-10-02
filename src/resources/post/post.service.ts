@@ -2,11 +2,11 @@ import { Injectable } from "@nestjs/common";
 import { IPostCreate, IPostFindUnique, IPostFindMany, IPostUpdate } from "./post.type";
 import { PrismaService } from "src/core/prisma/prisma.service";
 import { Prisma } from "@prisma/client";
-import { CommonSerivce } from "src/common/utils/common.service";
+import { CommonService } from "src/common/utils/common.service";
 import { Constant } from "./post.constant";
 
 @Injectable()
-export class PostService extends CommonSerivce {
+export class PostService extends CommonService {
   constructor(private readonly prisma: PrismaService) {
     super(Constant);
   }

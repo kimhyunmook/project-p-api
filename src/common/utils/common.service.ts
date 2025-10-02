@@ -1,6 +1,6 @@
 import { MetaDto } from "../dto/list-response.dto";
 
-export class CommonSerivce {
+export class CommonService {
   constructor(private readonly constant: Constnat) {}
 
   protected get Name(): string {
