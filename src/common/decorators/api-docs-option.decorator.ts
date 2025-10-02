@@ -1,7 +1,7 @@
 import { Delete, Get, Patch, Post, Put, applyDecorators, Type } from "@nestjs/common";
 import { ApiOperation, ApiBearerAuth } from "@nestjs/swagger";
 import { UseRoleGuard } from "./role-guard.decorator";
-import { Role } from "@prisma/client";
+import { Role } from "../interface/jwt.interface";
 
 const methodMap = {
   GET: Get,
@@ -42,7 +42,7 @@ export function ApiDocs({
   return applyDecorators(...decorators);
 }
 
-interface ApiDocsOptions {
+export interface ApiDocsOptions {
   method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   endpoint?: string;
   summary: string;

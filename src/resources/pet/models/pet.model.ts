@@ -1,5 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsOptional, IsDate, IsBoolean, IsNumber, IsEnum } from "class-validator";
+import {
+  IsString,
+  IsOptional,
+  IsDate,
+  IsBoolean,
+  IsNumber,
+  IsEnum,
+} from "class-validator";
 import { Type } from "class-transformer";
 import { $Enums, Pet } from "@prisma/client";
 
@@ -9,7 +16,11 @@ export class PetModel implements Pet {
   @Type(() => Number)
   id: number;
 
-  @ApiProperty({ description: "애완동물 타입", nullable: false, enum: $Enums.PetType })
+  @ApiProperty({
+    description: "애완동물 타입",
+    nullable: false,
+    enum: $Enums.PetType,
+  })
   @IsEnum($Enums.PetType)
   type: $Enums.PetType;
 

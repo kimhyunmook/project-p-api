@@ -1,14 +1,16 @@
 import { Injectable } from "@nestjs/common";
-import { IPetCreate, IPetFindUnique, IPetFindMany, IPetUpdate } from "./pet.type";
+import { IPetCreate, IPetFindUnique, IPetFindMany, IPetUpdate } from "./pet.interface";
 import { PrismaService } from "src/core/prisma/prisma.service";
-import { Constant } from "./pet.constant";
 import { CommonService } from "src/common/utils/common.service";
+import { createPaginationOptions } from "src/common/helpers/pagination.helper";
 import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class PetService extends CommonService {
+  public static readonly MODULE_NAME = "Pet";
+
   constructor(private readonly prisma: PrismaService) {
-    super(Constant);
+    super({ NAME: PetService.MODULE_NAME });
   }
 
   async create(data: IPetCreate) {
@@ -26,14 +28,7 @@ export class PetService extends CommonService {
   async fidnMany({ page, take, sort, ...rest }: IPetFindMany) {
     const option: Prisma.PetFindManyArgs = {
       where: { ...rest },
-      take,
-      skip: (page - 1) * take,
-      orderBy: (() => {
-        switch (sort) {
-          default:
-            return { createdAt: "desc" };
-        }
-      })(),
+      ...createPaginationOptions({ page, take, sort }),
     };
 
     const [resources, totalCount] = await this.prisma.$transaction([

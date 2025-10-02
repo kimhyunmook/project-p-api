@@ -16,13 +16,13 @@ export class UserController extends CommonController {
     super(CONSTANT.NAME);
   }
 
-  @ApiDocs({ endpoint: "own", summary: "내 정보 조회", role: "USER" })
+  @ApiDocs({ endpoint: "own", summary: "내 정보 조회", role: "user" })
   async findUnique(@User() user: JwtPayload): Promise<UserFindUniqueResponseDto> {
     const resource = await this.service.findUniqueAndThrow({ id: user.sub });
     return this.responseData(this.FIND_UNIQUE, resource);
   }
 
-  @ApiDocs({ method: "PATCH", endpoint: ":id", summary: `${CONSTANT.NAME} 수정`, role: "USER" })
+  @ApiDocs({ method: "PATCH", endpoint: ":id", summary: `${CONSTANT.NAME} 수정`, role: "user" })
   async update(
     @Param("id", ParseIntPipe) id: number,
     @Body() body: UserUpdateDto,
@@ -31,7 +31,7 @@ export class UserController extends CommonController {
     return this.responseData(this.UPDATE);
   }
 
-  @ApiDocs({ method: "DELETE", endpoint: ":id", summary: `${CONSTANT.NAME} 탈퇴`, role: "USER" })
+  @ApiDocs({ method: "DELETE", endpoint: ":id", summary: `${CONSTANT.NAME} 탈퇴`, role: "user" })
   async softDelete(@Param("id") id: number): Promise<NullDataResponseDto> {
     await this.service.softDelete(id);
     return this.responseData(this.DELETE);
