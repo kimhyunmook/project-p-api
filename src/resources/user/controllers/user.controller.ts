@@ -22,16 +22,16 @@ export class UserController extends CommonController {
     return this.responseData(this.FIND_UNIQUE, resource);
   }
 
-  @ApiDocs({ method: "PATCH", endpoint: ":id", summary: `${CONSTANT.NAME} 수정`, role: "user" })
+  @ApiDocs({ method: "PATCH", endpoint: ":id", summary: `내 정보 수정`, role: "user" })
   async update(
-    @Param("id", ParseIntPipe) id: number,
     @Body() body: UserUpdateDto,
+    @Account() account: AccountPayload,
   ): Promise<NullDataResponseDto> {
-    await this.service.update(id, body);
+    await this.service.update(account.sub, body);
     return this.responseData(this.UPDATE);
   }
 
-  @ApiDocs({ method: "DELETE", endpoint: ":id", summary: `${CONSTANT.NAME} 탈퇴`, role: "user" })
+  @ApiDocs({ method: "DELETE", endpoint: ":id", summary: `회원 탈퇴`, role: "user" })
   async softDelete(@Account() account: AccountPayload): Promise<NullDataResponseDto> {
     await this.service.softDelete(account.sub);
     return this.responseData(this.DELETE);
