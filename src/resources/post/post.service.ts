@@ -41,7 +41,10 @@ export class PostService extends CommonService implements OnModuleInit {
 
         if (!exists) {
           await this.prisma.category.create({
-            data: category,
+            data: {
+              ...category,
+              ...(category.type ? { type: category.type } : { type: $Enums.InfoType.POST }),
+            },
           });
           this.logger.log(`✅ 카테고리 생성: ${category.name}`);
         } else this.logger.log(`✅ 카테고리 존재: ${category.name}`);
