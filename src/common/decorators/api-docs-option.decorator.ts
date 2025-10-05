@@ -1,5 +1,5 @@
 import { Delete, Get, Patch, Post, Put, applyDecorators, Type } from "@nestjs/common";
-import { ApiOperation, ApiBearerAuth } from "@nestjs/swagger";
+import { ApiOperation, ApiBearerAuth, ApiResponse } from "@nestjs/swagger";
 import { UseRoleGuard } from "./role-guard.decorator";
 import { Role } from "../interface/jwt.interface";
 
@@ -18,7 +18,7 @@ function getHttpMethodDecorator(method: string, endpoint: string) {
 
 function getDescription(summaryDesc: string | undefined, role?: Role) {
   return `
-  - API 설명 ${summaryDesc ? summaryDesc : ""}
+  - ${summaryDesc ? summaryDesc : "API 설명"}
   ${role ? "- Auth 인증이 필요한 API입니다." : ""}
   `;
 }
@@ -29,11 +29,25 @@ export function ApiDocs({
   method = "GET",
   endpoint = "",
   role,
+  responses,
 }: ApiDocsOptions) {
   const decorators = [
     getHttpMethodDecorator(method, endpoint),
     ApiOperation({ summary, description: getDescription(description, role) }),
   ];
+
+  // 응답 스키마 추가
+  if (responses) {
+    responses.forEach((response) => {
+      decorators.push(
+        ApiResponse({
+          status: response.status,
+          description: response.description,
+          type: response.type,
+        }),
+      );
+    });
+  }
 
   if (role) {
     decorators.push(ApiBearerAuth(), UseRoleGuard(role));
@@ -42,10 +56,17 @@ export function ApiDocs({
   return applyDecorators(...decorators);
 }
 
+export interface ApiResponseOption {
+  status: number;
+  description: string;
+  type: Type<any>;
+}
+
 export interface ApiDocsOptions {
   method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   endpoint?: string;
   summary: string;
   description?: string;
   role?: Role;
+  responses?: ApiResponseOption[];
 }

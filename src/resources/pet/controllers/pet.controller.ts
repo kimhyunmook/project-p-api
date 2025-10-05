@@ -1,6 +1,6 @@
 import { Body, Param, ParseIntPipe, Query } from "@nestjs/common";
 import { PetService } from "../pet.service";
-import { IdOnlyResponseDto, NullDataResponseDto } from "src/common/dto/response.dto";
+import { NumberIdOnlyResponseDto, NullDataResponseDto } from "src/common/dto/response.dto";
 import { CommonController } from "src/common/utils/common.controller";
 import { ApiController } from "src/common/decorators/api-controller.decorator";
 import { ApiDocs } from "src/common/decorators/api-docs-option.decorator";
@@ -31,7 +31,7 @@ export class PetController extends CommonController {
   }
 
   @ApiDocs({ method: "POST", summary: `${PetService.MODULE_NAME} 등록` })
-  async create(@Body() body: PetCreateDto): Promise<IdOnlyResponseDto> {
+  async create(@Body() body: PetCreateDto): Promise<NumberIdOnlyResponseDto> {
     const { id } = await this.service.create(body);
     return this.responseData(this.CREATE, { id });
   }

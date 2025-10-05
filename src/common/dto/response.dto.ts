@@ -1,5 +1,4 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { MetaDto } from "./list-response.dto";
 
 export class ResponseDto {
   @ApiProperty({ description: "상태 코드", type: Number, example: 200 })
@@ -9,14 +8,24 @@ export class ResponseDto {
   message: string;
 }
 
-class IdNumberDataDto<T = number> {
+export class IdNumberDataDto {
   @ApiProperty({ description: "아이디", type: Number })
-  id: T;
+  id: number;
 }
 
-export class IdOnlyResponseDto<T = number> extends ResponseDto {
-  @ApiProperty({ description: "데이터", type: IdNumberDataDto<T>, nullable: false })
-  data: IdNumberDataDto<T>;
+export class NumberIdOnlyResponseDto extends ResponseDto {
+  @ApiProperty({ description: "데이터", type: IdNumberDataDto, nullable: false })
+  data: IdNumberDataDto;
+}
+
+export class IdStringDataDto {
+  @ApiProperty({ description: "아이디", type: String })
+  id: string;
+}
+
+export class StringIdOnlyResponseDto extends ResponseDto {
+  @ApiProperty({ description: "데이터", type: IdNumberDataDto, nullable: false })
+  data: IdStringDataDto;
 }
 
 export class NullDataResponseDto extends ResponseDto {

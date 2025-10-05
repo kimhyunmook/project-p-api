@@ -1,6 +1,6 @@
 import { Body, Param, ParseIntPipe, Query } from "@nestjs/common";
 import { PostService } from "../post.service";
-import { IdOnlyResponseDto, NullDataResponseDto } from "src/common/dto/response.dto";
+import { NumberIdOnlyResponseDto, NullDataResponseDto } from "src/common/dto/response.dto";
 import { CommonController } from "src/common/utils/common.controller";
 import { ApiController } from "src/common/decorators/api-controller.decorator";
 import { ApiDocs } from "src/common/decorators/api-docs-option.decorator";
@@ -31,7 +31,7 @@ export class PostController extends CommonController {
   }
 
   @ApiDocs({ method: "POST", summary: `${PostService.MODULE_NAME} 생성`, role: "user" })
-  async create(@Body() body: PostCreateDto): Promise<IdOnlyResponseDto> {
+  async create(@Body() body: PostCreateDto): Promise<NumberIdOnlyResponseDto> {
     const { id } = await this.service.create(body);
     return this.responseData(this.CREATE, { id });
   }

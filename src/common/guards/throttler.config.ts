@@ -6,7 +6,12 @@ import { ThrottlerModuleOptions } from "@nestjs/throttler";
  */
 export const throttlerConfig: ThrottlerModuleOptions = [
   {
-    name: "short", // 짧은 시간 제한
+    name: "default", // 기본 제한
+    ttl: parseInt(process.env.THROTTLE_TTL || "60000"), // 기본 1분
+    limit: parseInt(process.env.THROTTLE_LIMIT || "100"), // 기본 1분에 100번
+  },
+  {
+    name: "short", // 짧은 시간 제한 (빠른 요청 방지)
     ttl: 1000, // 1초
     limit: 3, // 1초에 3번
   },
@@ -15,26 +20,22 @@ export const throttlerConfig: ThrottlerModuleOptions = [
     ttl: 10000, // 10초
     limit: 20, // 10초에 20번
   },
-  {
-    name: "long", // 긴 시간 제한
-    ttl: 60000, // 1분
-    limit: 100, // 1분에 100번
-  },
 ];
 
 /**
  * 엔드포인트별 커스텀 제한
+ * 인증 관련 엔드포인트에 대한 특별한 제한
  */
 export const THROTTLE_SKIP_IF = {
-  // 로그인 엔드포인트 - 엄격한 제한
-  login: {
-    ttl: 60000, // 1분
-    limit: 5, // 1분에 5번만
+  // 로그인 엔드포인트 - 엄격한 제한 (Brute Force 방어)
+  signin: {
+    ttl: parseInt(process.env.LOGIN_THROTTLE_TTL || "60000"), // 기본 1분
+    limit: parseInt(process.env.LOGIN_THROTTLE_LIMIT || "5"), // 기본 1분에 5번
   },
 
-  // 회원가입 - 보통 제한
+  // 회원가입 - 보통 제한 (스팸 방지)
   signup: {
-    ttl: 3600000, // 1시간
-    limit: 3, // 1시간에 3번만
+    ttl: parseInt(process.env.SIGNUP_THROTTLE_TTL || "3600000"), // 기본 1시간
+    limit: parseInt(process.env.SIGNUP_THROTTLE_LIMIT || "3"), // 기본 1시간에 3번
   },
 };

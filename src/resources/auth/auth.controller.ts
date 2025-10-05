@@ -1,4 +1,5 @@
 import { Body, Res } from "@nestjs/common";
+import { Throttle } from "@nestjs/throttler";
 import { AuthService } from "./auth.service";
 import { SigninDto, SingupDto } from "./dto/sign.dto";
 import { ApiController } from "src/common/decorators/api-controller.decorator";
@@ -7,7 +8,8 @@ import { Response } from "express";
 import { SignInResponseDto } from "./dto/response/sign-response.dto";
 import { CommonController } from "src/common/utils/common.controller";
 import { ConfigService } from "@nestjs/config";
-import { IdOnlyResponseDto } from "src/common/dto/response.dto";
+import { NumberIdOnlyResponseDto } from "src/common/dto/response.dto";
+import { THROTTLE_SKIP_IF } from "src/common/guards/throttler.config";
 
 @ApiController("auth")
 export class AuthController extends CommonController {
@@ -18,12 +20,14 @@ export class AuthController extends CommonController {
     super("Auth");
   }
 
-  @ApiDocs({ method: "POST", endpoint: "signup", summary: "회원가입" })
-  async signup(@Body() body: SingupDto): Promise<IdOnlyResponseDto> {
+  @Throttle({ default: THROTTLE_SKIP_IF.signup })
+  @ApiDocs({ method: "POST", endpoint: "signup", summary: "회원가입", description: "회원가입" })
+  async signup(@Body() body: SingupDto): Promise<NumberIdOnlyResponseDto> {
     const { id } = await this.authService.signUp(body);
     return this.responseData("회원가입", { id });
   }
 
+  @Throttle({ default: THROTTLE_SKIP_IF.signin })
   @ApiDocs({ method: "POST", endpoint: "signin", summary: "로그인" })
   async signin(
     @Body() body: SigninDto,
