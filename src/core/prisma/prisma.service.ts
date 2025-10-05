@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit, Logger } from "@nestjs/common";
-import { PrismaClient, Prisma } from "@prisma/client";
-import { createErrorMappingExtension } from "./prisma.config";
+import { PrismaClient } from "@prisma/client";
+import { createErrorMappingExtension } from "./prisma.core";
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {

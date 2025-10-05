@@ -10,9 +10,10 @@ model Post {
     updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
     deletedAt DateTime? @map("deleted_at") @db.Timestamptz(3)
 
-    author   User      @relation(fields: [authorId], references: [id])
-    category Category? @relation(fields: [categoryId], references: [id])
-    tags     PostTag[]
+    author    User        @relation(fields: [authorId], references: [id])
+    category  Category?   @relation(fields: [categoryId], references: [id])
+    tags      PostTag[]
+    PostReply PostReply[]
 
     @@index([createdAt])
     @@map("post")
@@ -27,3 +28,5 @@ model PostTag {
     @@id([postId, tagId]) // 복합 PK
     @@map("post_tag")
 }
+
+

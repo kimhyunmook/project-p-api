@@ -11,17 +11,11 @@ import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { RoleGuard } from "./common/guards/auth.guard";
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { PostReplyModule } from "./resources/post/relations/post-reply/post-reply.module";
+import { HealthModule } from "./core/health/health.module";
 
 @Module({
   imports: [
-    LoggerModule,
-    AppConfigModule,
-    PrismaModule,
-    SwaggerModule,
-    AuthModule,
-    UserModule,
-    PostModule,
-
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -36,6 +30,17 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
       },
       global: true,
     }),
+    LoggerModule,
+
+    // resources
+    HealthModule,
+    AppConfigModule,
+    PrismaModule,
+    SwaggerModule,
+    AuthModule,
+    UserModule,
+    PostModule,
+    PostReplyModule,
   ],
   providers: [
     {

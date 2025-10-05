@@ -1,0 +1,14 @@
+model PostReply {
+    id      Int    @id @default(autoincrement()) /// 아이디
+    postId  Int    @map("post_id") /// 게시글 아이디
+    post    Post   @relation(fields: [postId], references: [id]) /// 게시글
+    content String @db.Text /// 내용
+    status  CommonStatus @default(ACTIVE) /// 상태
+
+    createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3) /// 생성일
+    updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3) /// 수정일
+    deletedAt DateTime? @map("deleted_at") @db.Timestamptz(3) /// 삭제일
+
+    @@index([createdAt])
+    @@map("post_reply")
+}

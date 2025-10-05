@@ -18,7 +18,7 @@ export class PostController extends CommonController {
     super(PostService.MODULE_NAME);
   }
 
-  @ApiDocs({ endpoint: ":id", summary: `${PostService.MODULE_NAME} 상세 조회`, role: "user" })
+  @ApiDocs({ endpoint: ":id", summary: `${PostService.MODULE_NAME} 상세 조회` })
   async findUnique(@Param("id", ParseIntPipe) id: number): Promise<PostFindUniqueResponseDto> {
     const res = await this.service.findUnique({ id });
     return this.responseData(this.FIND_UNIQUE, res);
