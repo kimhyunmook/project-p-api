@@ -1,11 +1,11 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import helmet from "helmet";
 import { CustomLoggerService } from "./core/logger/custom-logger.service";
+import { SwaggerService } from "./core/swagger/swagger.service";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -49,22 +49,9 @@ async function bootstrap() {
 
   app.set("trust proxy", true);
 
-  // app.setGlobalPrefix("api/v1");
-
-  const config = new DocumentBuilder()
-    .setTitle("Project P API")
-    .setDescription("The Project P API description")
-    .setVersion("1.0")
-    .addBearerAuth()
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-
-  SwaggerModule.setup("api-docs", app, document, {
-    swaggerOptions: {
-      defaultModelsExpandDepth: -1,
-      persistAuthorization: true,
-    },
-  });
+  // Swagger 및 전역 설정
+  const swaggerService = app.get(SwaggerService);
+  swaggerService.setup(app);
 
   app.useGlobalPipes(
     new ValidationPipe({

@@ -5,6 +5,7 @@ import { AppConfigModule } from "./core/config/app-config.module";
 import { AuthModule } from "./resources/auth/auth.module";
 import { PostModule } from "./resources/post/post.module";
 import { LoggerModule } from "./core/logger/logger.module";
+import { SwaggerModule } from "./core/swagger/swagger.module";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { RoleGuard } from "./common/guards/auth.guard";
@@ -16,10 +17,11 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
     LoggerModule,
     AppConfigModule,
     PrismaModule,
+    SwaggerModule,
     AuthModule,
     UserModule,
     PostModule,
-    // JWT 모듈을 전역에서 사용 가능하도록 설정
+
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -36,7 +38,6 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
     }),
   ],
   providers: [
-    // 전역 Guard 설정
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
