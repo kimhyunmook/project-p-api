@@ -1,18 +1,18 @@
 model Category {
-    id    Int       @id @default(autoincrement())
-    name  String    @unique @db.VarChar(100)
-    type  InfoType?
-    posts Post[]
-    pet   Pet[]
+  id    Int       @id @default(autoincrement())
+  name  String    @unique @db.VarChar(100)
+  type  InfoType?
+  posts Post[]
+  pet   Pet[]
 
-    createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
-    updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
-    deletedAt DateTime? @map("deleted_at") @db.Timestamptz(3)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(3)
 
-    @@map("category")
+  @@map("category")
 }
 
 enum InfoType {
-    POST @map("게시글")
-    PET  @map("애완동물")
+  POST @map("게시글")
+  PET  @map("애완동물")
 }

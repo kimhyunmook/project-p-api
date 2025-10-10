@@ -4,9 +4,10 @@ model Pet {
     name String  @db.VarChar(100) /// 애완동물 이름
     age  Int     @default(0) /// 애완동물 나이
 
-    owner    User      @relation(fields: [ownerId], references: [id])
-    category Category? @relation(fields: [categoryId], references: [id])
-    tag      Tag?      @relation(fields: [tagId], references: [id])
+    owner      User          @relation(fields: [ownerId], references: [id])
+    category   Category?     @relation(fields: [categoryId], references: [id])
+    tag        Tag?          @relation(fields: [tagId], references: [id])
+    activities PetActivity[] /// 펫 활동 기록들
 
     ownerId    Int  @map("owner_id") /// 주인 아이디
     categoryId Int? @map("category_id") /// 카테고리 아이디
@@ -17,11 +18,4 @@ model Pet {
     deletedAt DateTime? @map("deleted_at") @db.Timestamptz(3) /// 삭제일
 
     @@map("pet")
-}
-
-enum PetType {
-    DOG  @map("강아지")
-    CAT  @map("고양이")
-    BIRD @map("새")
-    FISH @map("물고기")
 }

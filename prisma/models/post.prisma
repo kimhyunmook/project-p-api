@@ -1,32 +1,30 @@
 model Post {
-    id         Int     @id @default(autoincrement())
-    title      String  @db.VarChar(100)
-    content    String  @db.Text
-    published  Boolean @default(false)
-    authorId   Int     @map("author_id")
-    categoryId Int?    @map("category_id")
+  id         Int     @id @default(autoincrement())
+  title      String  @db.VarChar(100)
+  content    String  @db.Text
+  published  Boolean @default(false)
+  authorId   Int     @map("author_id")
+  categoryId Int?    @map("category_id")
 
-    createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
-    updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
-    deletedAt DateTime? @map("deleted_at") @db.Timestamptz(3)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(3)
 
-    author    User        @relation(fields: [authorId], references: [id])
-    category  Category?   @relation(fields: [categoryId], references: [id])
-    tags      PostTag[]
-    PostReply PostReply[]
+  author    User        @relation(fields: [authorId], references: [id])
+  category  Category?   @relation(fields: [categoryId], references: [id])
+  tags      PostTag[]
+  PostReply PostReply[]
 
-    @@index([createdAt])
-    @@map("post")
+  @@index([createdAt])
+  @@map("post")
 }
 
 model PostTag {
-    post   Post @relation(fields: [postId], references: [id])
-    postId Int
-    tag    Tag  @relation(fields: [tagId], references: [id])
-    tagId  Int
+  post   Post @relation(fields: [postId], references: [id])
+  postId Int
+  tag    Tag  @relation(fields: [tagId], references: [id])
+  tagId  Int
 
-    @@id([postId, tagId]) // 복합 PK
-    @@map("post_tag")
+  @@id([postId, tagId]) // 복합 PK
+  @@map("post_tag")
 }
-
-

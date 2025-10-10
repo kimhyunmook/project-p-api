@@ -1,0 +1,26 @@
+model PetActivity {
+    id          Int     @id @default(autoincrement()) /// 아이디
+    title       String  @db.VarChar(200) /// 활동 제목
+    description String? @db.Text /// 활동 설명
+
+    activityDate DateTime  @map("activity_date") @db.Date /// 활동 날짜
+    startTime    DateTime? @map("start_time") @db.Timestamptz(3) /// 시작 시간
+    endTime      DateTime? @map("end_time") @db.Timestamptz(3) /// 종료 시간
+
+    type   PetActivityType /// 활동 타입
+    status PetActivityStatus @default(SCHEDULED) /// 활동 상태
+
+    isAllDay Boolean @default(false) @map("is_all_day") /// 종일 일정 여부
+    reminder Int? /// 알림 시간 (분 단위, ex: 30 = 30분 전)
+
+    pet   Pet @relation(fields: [petId], references: [id])
+    petId Int @map("pet_id") /// 펫 아이디
+
+    createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3) /// 생성일
+    updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3) /// 수정일
+    deletedAt DateTime? @map("deleted_at") @db.Timestamptz(3) /// 삭제일
+
+    @@index([petId, activityDate]) // 펫별 날짜로 빠른 조회
+    @@index([activityDate]) // 날짜별 조회
+    @@map("pet_activity")
+}

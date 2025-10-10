@@ -1,6 +1,6 @@
 enum CommonStatus {
-    ACTIVE @map("활성")
-    INACTIVE @map("비활성")
-    SUSPENDED @map("정지")
-    BANNED @map("차단")
+  ACTIVE    @map("활성")
+  INACTIVE  @map("비활성")
+  SUSPENDED @map("정지")
+  BANNED    @map("차단")
 }

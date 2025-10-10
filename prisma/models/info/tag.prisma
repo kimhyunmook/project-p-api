@@ -1,14 +1,14 @@
 model Tag {
-    id   Int    @id @default(autoincrement())
-    name String @unique @db.VarChar(100)
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(100)
 
-    type  InfoType?
-    posts PostTag[]
-    pet   Pet[]
+  type  InfoType?
+  posts PostTag[]
+  pet   Pet[]
 
-    createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
-    updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
-    deletedAt DateTime? @map("deleted_at") @db.Timestamptz(3)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(3)
 
-    @@map("tag")
+  @@map("tag")
 }

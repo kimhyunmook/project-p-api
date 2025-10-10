@@ -1,4 +1,5 @@
 import { NestExpressApplication } from "@nestjs/platform-express";
+import { LoggerService } from "@nestjs/common";
 import { WINSTON_MODULE_NEST_PROVIDER } from "nest-winston";
 
 /**
@@ -13,7 +14,7 @@ export function setupLogger(app: NestExpressApplication) {
  * 서버 시작 로그 출력
  */
 export function logServerStart(app: NestExpressApplication, port: number, env: string) {
-  const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
+  const logger = app.get<LoggerService>(WINSTON_MODULE_NEST_PROVIDER);
 
   logger.log(`🚀 Server is running on: http://localhost:${port}`);
   logger.log(`📚 Swagger documentation: http://localhost:${port}/api-docs`);
