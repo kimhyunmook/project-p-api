@@ -1,16 +1,20 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
-import { ValidationPipe } from "@nestjs/common";
+import { LoggerService, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import helmet from "helmet";
-import { CustomLoggerService } from "./core/logger/custom-logger.service";
+import { WINSTON_MODULE_NEST_PROVIDER } from "nest-winston";
 import { SwaggerService } from "./core/swagger/swagger.service";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: new CustomLoggerService(),
+    logger: false, // NestJS 기본 로거 비활성화
   });
+
+  // Winston 로거 사용
+  app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+
   const configService = app.get(ConfigService);
 
   app.use(
@@ -70,7 +74,7 @@ async function bootstrap() {
   await app.listen(port);
 
   // 서버 시작 로그
-  const logger = new CustomLoggerService();
+  const logger = app.get<LoggerService>(WINSTON_MODULE_NEST_PROVIDER);
   logger.log(`🚀 Server is running on: http://localhost:${port}`);
   logger.log(`📚 Swagger documentation: http://localhost:${port}/api-docs`);
   logger.log(`🔒 Environment: ${configService.get<string>("NODE_ENV") || "development"}`);

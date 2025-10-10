@@ -6,13 +6,14 @@ import { AuthModule } from "./resources/auth/auth.module";
 import { PostModule } from "./resources/post/post.module";
 import { LoggerModule } from "./core/logger/logger.module";
 import { SwaggerModule } from "./core/swagger/swagger.module";
-import { APP_GUARD } from "@nestjs/core";
+import { APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
 import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { RoleGuard } from "./common/guards/auth.guard";
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { PostReplyModule } from "./resources/post/relations/post-reply/post-reply.module";
 import { HealthModule } from "./core/health/health.module";
+import { HttpLoggingInterceptor } from "./core/logger/http-logging.interceptor";
 
 @Module({
   imports: [
@@ -50,6 +51,10 @@ import { HealthModule } from "./core/health/health.module";
     {
       provide: APP_GUARD,
       useClass: RoleGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: HttpLoggingInterceptor,
     },
   ],
 })

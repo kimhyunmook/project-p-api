@@ -1,8 +1,11 @@
-import { Injectable, LoggerService, LogLevel } from "@nestjs/common";
+import { Injectable, LoggerService, Inject } from "@nestjs/common";
+import { WINSTON_MODULE_PROVIDER } from "nest-winston";
+import { Logger } from "winston";
 
 /**
  * 커스텀 로거 서비스
- * 특정 로그를 필터링하여 콘솔 출력 제어
+ * Winston 기반 날짜별 로그 파일 저장
+ * 프로덕션 환경에서 로그를 파일로 저장하고 관리
  */
 @Injectable()
 export class CustomLoggerService implements LoggerService {
@@ -14,15 +17,7 @@ export class CustomLoggerService implements LoggerService {
     "NestFactory",
   ];
 
-  // 로그 레벨별 색상
-  private readonly COLORS = {
-    log: "\x1b[32m", // 녹색
-    error: "\x1b[31m", // 빨강
-    warn: "\x1b[33m", // 노랑
-    debug: "\x1b[35m", // 마젠타
-    verbose: "\x1b[36m", // 시안
-    reset: "\x1b[0m", // 리셋
-  };
+  constructor(@Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger) {}
 
   /**
    * 로그를 숨길지 판단
@@ -33,42 +28,39 @@ export class CustomLoggerService implements LoggerService {
   }
 
   /**
-   * 로그 출력 포맷팅
+   * 메시지 포맷팅
    */
-  private formatLog(level: string, message: string, context?: string): string {
-    const timestamp = new Date().toLocaleTimeString("ko-KR");
-    const color = this.COLORS[level as keyof typeof this.COLORS] || this.COLORS.log;
+  private formatMessage(message: any, context?: string): string {
     const contextStr = context ? `[${context}] ` : "";
-
-    return `${color}[${timestamp}] ${level.toUpperCase()}${this.COLORS.reset} ${contextStr}${message}`;
+    return `${contextStr}${message}`;
   }
 
   log(message: any, context?: string) {
     if (this.shouldHideLog(message, context)) return;
-    console.log(this.formatLog("log", message, context));
+    this.logger.info(this.formatMessage(message, context));
   }
 
   error(message: any, trace?: string, context?: string) {
     if (this.shouldHideLog(message, context)) return;
-    console.error(this.formatLog("error", message, context));
-    if (trace) {
-      console.error(trace);
-    }
+    this.logger.error(this.formatMessage(message, context), {
+      trace,
+      context,
+    });
   }
 
   warn(message: any, context?: string) {
     if (this.shouldHideLog(message, context)) return;
-    console.warn(this.formatLog("warn", message, context));
+    this.logger.warn(this.formatMessage(message, context));
   }
 
   debug(message: any, context?: string) {
     if (this.shouldHideLog(message, context)) return;
-    console.debug(this.formatLog("debug", message, context));
+    this.logger.debug(this.formatMessage(message, context));
   }
 
   verbose(message: any, context?: string) {
     if (this.shouldHideLog(message, context)) return;
-    console.log(this.formatLog("verbose", message, context));
+    this.logger.verbose(this.formatMessage(message, context));
   }
 
   /**
@@ -86,5 +78,55 @@ export class CustomLoggerService implements LoggerService {
     if (index > -1) {
       this.HIDDEN_LOG_PATTERNS.splice(index, 1);
     }
+  }
+
+  /**
+   * 커스텀 로그 메서드들
+   */
+
+  /**
+   * HTTP 요청 로그
+   */
+  logRequest(method: string, url: string, statusCode: number, ip: string) {
+    this.logger.info("HTTP Request", {
+      method,
+      url,
+      statusCode,
+      ip,
+      type: "http",
+    });
+  }
+
+  /**
+   * 데이터베이스 쿼리 로그
+   */
+  logQuery(query: string, duration: number) {
+    this.logger.debug("Database Query", {
+      query,
+      duration,
+      type: "database",
+    });
+  }
+
+  /**
+   * 비즈니스 로직 로그
+   */
+  logBusiness(action: string, data?: any) {
+    this.logger.info("Business Logic", {
+      action,
+      data,
+      type: "business",
+    });
+  }
+
+  /**
+   * 보안 관련 로그
+   */
+  logSecurity(event: string, details?: any) {
+    this.logger.warn("Security Event", {
+      event,
+      details,
+      type: "security",
+    });
   }
 }

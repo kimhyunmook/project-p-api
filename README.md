@@ -25,10 +25,39 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Features
+
+- 🔐 JWT 기반 인증/인가
+- 📝 날짜별 로그 파일 자동 관리 (Winston)
+- 🗄️ Prisma ORM
+- 📚 Swagger API 문서
+- 🛡️ Helmet 보안
+- 🚀 AWS S3 연동
+
 ## Project setup
 
 ```bash
 $ npm install
+```
+
+## Environment Variables
+
+`.env` 파일을 생성하고 다음 환경 변수를 설정하세요:
+
+```env
+# 애플리케이션
+NODE_ENV=development
+PORT=3000
+
+# 데이터베이스
+DATABASE_URL="postgresql://user:password@localhost:5432/dbname"
+
+# JWT
+JWT_SECRET=your-secret-key
+JWT_EXPIRES_IN=7d
+
+# 로그 설정
+LOG_DIR=logs
 ```
 
 ## Compile and run the project
@@ -55,6 +84,39 @@ $ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
+```
+
+## Logging
+
+Winston 기반 날짜 폴더별 로그 시스템
+
+```
+logs/
+├── 2025-10-10/
+│   ├── app.log      # 모든 로그
+│   └── error.log    # 에러만
+└── 2025-10-11/
+    ├── app.log
+    └── error.log
+```
+
+**사용 예제:**
+
+```typescript
+// 서비스에서 주입
+constructor(private readonly logger: CustomLoggerService) {}
+
+// 로그 기록
+this.logger.log("메시지", "Context");
+this.logger.error("에러", error.stack, "Context");
+this.logger.logBusiness("주문완료", { orderId: 123 });
+```
+
+**로그 확인:**
+
+```bash
+tail -f logs/2025-10-10/app.log    # 전체
+tail -f logs/2025-10-10/error.log  # 에러만
 ```
 
 ## Deployment
