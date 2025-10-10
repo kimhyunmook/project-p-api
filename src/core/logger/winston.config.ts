@@ -1,6 +1,7 @@
 import * as winston from "winston";
 import * as DailyRotateFile from "winston-daily-rotate-file";
 import { utilities as nestWinstonModuleUtilities } from "nest-winston";
+import * as path from "path";
 
 /**
  * Winston 로거 설정 (날짜 폴더별 관리)
@@ -11,6 +12,16 @@ import { utilities as nestWinstonModuleUtilities } from "nest-winston";
 // 로그 디렉토리
 const LOG_DIR = process.env.LOG_DIR || "logs";
 
+// 현재 날짜로 폴더 생성 (YYYY-MM-DD)
+const getLogDir = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  const dateFolder = `${year}-${month}-${day}`;
+  return path.join(LOG_DIR, dateFolder);
+};
+
 // 숨길 로그 패턴 (NestJS 시스템 로그)
 const HIDDEN_PATTERNS = [
   "InstanceLoader",
@@ -18,6 +29,8 @@ const HIDDEN_PATTERNS = [
   "RouterExplorer",
   "NestFactory",
   "Mapped {",
+  "Database connected",
+  "Database disconnected",
 ];
 
 // 로그 필터 (특정 패턴 제외)
@@ -54,27 +67,21 @@ const consoleFormat = winston.format.combine(
   }),
 );
 
-// 모든 로그 파일 (날짜 폴더별로 저장)
-const allLogsTransport = new DailyRotateFile({
+// 모든 로그 파일 (날짜 폴더별)
+const allLogsTransport = new winston.transports.File({
   level: "debug",
-  dirname: `${LOG_DIR}/%DATE%`,
+  dirname: getLogDir(),
   filename: "app.log",
-  datePattern: "YYYY-MM-DD",
-  zippedArchive: false, // 폴더별로 관리하므로 압축 불필요
-  maxSize: "20m",
-  maxFiles: "14d", // 2주간 보관
+  maxsize: 20 * 1024 * 1024, // 20MB
   format: logFormat,
 });
 
-// 에러 로그만 별도 저장 (같은 날짜 폴더 안에)
-const errorLogsTransport = new DailyRotateFile({
+// 에러 로그만 별도 저장
+const errorLogsTransport = new winston.transports.File({
   level: "error",
-  dirname: `${LOG_DIR}/%DATE%`,
+  dirname: getLogDir(),
   filename: "error.log",
-  datePattern: "YYYY-MM-DD",
-  zippedArchive: false,
-  maxSize: "20m",
-  maxFiles: "30d", // 에러는 1개월간 보관
+  maxsize: 20 * 1024 * 1024, // 20MB
   format: logFormat,
 });
 

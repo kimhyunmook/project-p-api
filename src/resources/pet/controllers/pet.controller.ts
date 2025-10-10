@@ -26,7 +26,7 @@ export class PetController extends CommonController {
 
   @ApiDocs({ summary: `${PetService.MODULE_NAME} 목록 조회` })
   async findMany(@Query() query: PetFindManyDto): Promise<PetFindManyResponseDto> {
-    const { resources, meta } = await this.service.fidnMany(query);
+    const { resources, meta } = await this.service.findMany(query);
     return this.responseData(this.FIND_MANY, resources, meta);
   }
 
@@ -54,7 +54,7 @@ export class PetController extends CommonController {
     endpoint: ":id",
     summary: `${PetService.MODULE_NAME} 등록 해제`,
   })
-  async softDelete(@Param("id") id: number): Promise<NullDataResponseDto> {
+  async softDelete(@Param("id", ParseIntPipe) id: number): Promise<NullDataResponseDto> {
     await this.service.softDelete(id);
     return this.responseData(this.DELETE);
   }

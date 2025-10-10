@@ -22,6 +22,6 @@ model Pet {
 enum PetType {
     DOG  @map("강아지")
     CAT  @map("고양이")
-    BRID @map("새")
+    BIRD @map("새")
     FISH @map("물고기")
 }

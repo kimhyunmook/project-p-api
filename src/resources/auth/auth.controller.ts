@@ -21,7 +21,12 @@ export class AuthController extends CommonController {
   }
 
   @Throttle({ default: THROTTLE_SKIP_IF.signup })
-  @ApiDocs({ method: "POST", endpoint: "signup", summary: "회원가입", description: "회원가입" })
+  @ApiDocs({
+    method: "POST",
+    endpoint: "signup",
+    summary: "회원가입",
+    description: "회원가입",
+  })
   async signup(@Body() body: SingupDto): Promise<NumberIdOnlyResponseDto> {
     const { id } = await this.authService.signUp(body);
     return this.responseData("회원가입", { id });
